@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sophie Bluel - Architecte d'intérieur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="./assets/style.css" />
+    <script src="assets/scripts/login.js" defer></script>
+    <script src="assets/scripts/modal.js" defer></script>
+  </head>
+  <body>
+    <!-- Wrapper -->
+    <div class="wrapper">
+      <header>
+        <a href="index.html" class="logo"
+          ><h1>Sophie Bluel <span>Architecte d'intérieur</span></h1></a
+        >
+        <nav>
+          <ul>
+            <li id="link-portfolio">projets</li>
+            <li id="link-contact">contact</li>
+            <li><a href="login.html" id="link-login">login</a></li>
+            <li><a href="#" id="link-logout">logout</a></li>
+            <li><img src="./assets/icons/instagram.png" alt="Instagram" /></li>
+          </ul>
+        </nav>
+      </header>
+      <main id="login-content">
+        <form id="login-form" action="#" method="post">
+          <h2>Log In</h2>
+          <label for="email">Email</label>
+          <input type="email" name="email" id="email"/>
+          <label for="password">Mot de passe</label>
+          <input type="password" name="password" id="password"/>
+          <input type="submit" value="Se connecter" />
+          <a href="#"><p id="forgot-password">Mot de passe oublié</p></a>
+          <p id="login-error" style="color: red; display: none">
+            Email ou mot de passe incorrect.
+          </p>
+          <!-- Message d'erreur -->
+        </form>
+      </main>
+      <!-- Fin du wrapper -->
+      <footer>
+        <nav>
+          <ul>
+            <li>Mentions Légales</li>
+          </ul>
+        </nav>
+      </footer>
+    </div>
+    <script>
+      document
+        .getElementById("link-portfolio")
+        .addEventListener("click", function (event) {
+          event.preventDefault();
+          window.location.href = "index.html#portfolio";
+        });
+      document
+        .getElementById("link-contact")
+        .addEventListener("click", function (event) {
+          event.preventDefault();
+          window.location.href = "index.html#contact";         
+        });
+    </script>
+  </body>
+</html>
