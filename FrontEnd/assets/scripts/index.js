@@ -454,164 +454,152 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  // GESTION DU PHOTO UPLOAD ET DES MESSAGES D'ERREUR ########################################################
+// GESTION DU PHOTO UPLOAD ET DES MESSAGES D'ERREUR ########################################################
 
-  // Fonction pour gérer l'upload de la photo
-  function handlePhotoUpload() {
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = ".jpg,.png";
-    fileInput.style.display = "none";
+// Fonction pour gérer l'upload de la photo
+function handlePhotoUpload() {
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = ".jpg,.png";
+  fileInput.style.display = "none";
 
-    fileInput.addEventListener("change", function (event) {
-      const file = event.target.files[0];
-      const sizeErrorMessageElement = document.getElementById(
-        "file-size-error-message"
-      ); // Élément pour afficher les erreurs de taille
-      const typeErrorMessageElement = document.getElementById(
-        "file-type-error-message"
-      ); // Élément pour afficher les erreurs de type
+  fileInput.addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    const sizeErrorMessageElement = document.getElementById(
+      "file-size-error-message"
+    ); // Élément pour afficher les erreurs de taille
+    const typeErrorMessageElement = document.getElementById(
+      "file-type-error-message"
+    ); // Élément pour afficher les erreurs de type
 
-      // Vider les messages d'erreur avant chaque validation
-      sizeErrorMessageElement.innerHTML = "";
-      typeErrorMessageElement.innerHTML = "";
+    // Vider les messages d'erreur avant chaque validation
+    sizeErrorMessageElement.innerHTML = "";
+    typeErrorMessageElement.innerHTML = "";
 
-      let isValid = true; // Variable pour suivre la validité du fichier
+    let isValid = true; // Variable pour suivre la validité du fichier
 
-      if (file) {
-        // Vérification du type de fichier
-        const validFileTypes = ["image/jpeg", "image/png"];
-        if (!validFileTypes.includes(file.type)) {
-          // Vérifier si le type du fichier est valide
-          // Afficher un message d'erreur en rouge si le type du fichier est incorrect
-          typeErrorMessageElement.textContent =
-            "Le fichier doit être de type .jpg ou .png";
-          typeErrorMessageElement.style.color = "red";
-          isValid = false; // Marquer le fichier comme invalide
-        }
-
-        // Vérification de la taille du fichier
-        if (file.size > 4 * 1024 * 1024) {
-          // Limite de taille de fichier à 4 Mo
-          // Afficher un message d'erreur en rouge si le fichier est trop volumineux
-          sizeErrorMessageElement.textContent =
-            "La taille du fichier doit faire moins de 4 Mo";
-          sizeErrorMessageElement.style.color = "red";
-          isValid = false; // Marquer le fichier comme invalide
-        }
-
-        // Ne procéder à l'affichage de l'image que si le fichier est valide
-        if (isValid) {
-          const fileUrl = URL.createObjectURL(file);
-          const img = document.createElement("img");
-          img.src = fileUrl;
-          img.style.height = "100%";
-          img.style.width = "auto";
-          img.style.display = "block";
-          img.style.margin = "auto";
-
-          const fenetreAjoutPhoto = document.getElementById(
-            "fenetre-ajout-photo"
-          );
-          fenetreAjoutPhoto.innerHTML = "";
-          fenetreAjoutPhoto.appendChild(img);
-        }
-      } else {
-        // Si aucun fichier n'est sélectionné (ce cas est déjà géré par le type d'input)
-        alert("Le fichier doit être au format .jpg ou .png");
+    if (file) {
+      // Vérification du type de fichier
+      const validFileTypes = ["image/jpeg", "image/png"];
+      if (!validFileTypes.includes(file.type)) {
+        // Vérifier si le type du fichier est valide
+        // Afficher un message d'erreur en rouge si le type du fichier est incorrect
+        typeErrorMessageElement.textContent =
+          "Le fichier doit être de type .jpg ou .png";
+        typeErrorMessageElement.style.color = "red";
+        isValid = false; // Marquer le fichier comme invalide
       }
-    });
 
-    fileInput.click(); // Ouvrir la boîte de dialogue de sélection de fichier
-  }
-
-  document
-    .getElementById("bouton-plus-ajouter-photo")
-    .addEventListener("click", function (event) {
-      event.preventDefault(); // Empêcher la soumission du formulaire par défaut
-      handlePhotoUpload();
-    });
-
-  // CONTROLE ET VALIDATION DU REMPLISSAGE DE TOUS LES CHAMPS DU FORMULAIRE D'AJOUT DE PHOTO #########
-
-  // Fonction pour contrôler le remplissage des champs du formulaire
-  function validateFormFields() {
-    const title = document
-      .querySelector('input[name="crea-titre-projet"]')
-      .value.trim();
-    const category = document.querySelector('select[name="categorie"]').value;
-    const imageUploaded = document.querySelector("#fenetre-ajout-photo img");
-    const validateButton = document.getElementById("bouton-valider-crea");
-    const errorMessageElement = document.getElementById("error-message");
-
-    if (title === "" || category === "" || !imageUploaded) {
-      if (!errorMessageElement) {
-        const newErrorMessage = document.createElement("p");
-        newErrorMessage.id = "error-message";
-        newErrorMessage.style.color = "red";
-        newErrorMessage.style.textAlign = "center";
-        newErrorMessage.textContent =
-          "Merci de compléter chacun des champs du formulaire.";
-        validateButton.insertAdjacentElement("beforebegin", newErrorMessage);
+      // Vérification de la taille du fichier
+      if (file.size > 4 * 1024 * 1024) {
+        // Limite de taille de fichier à 4 Mo
+        // Afficher un message d'erreur en rouge si le fichier est trop volumineux
+        sizeErrorMessageElement.textContent =
+          "La taille du fichier doit faire moins de 4 Mo";
+        sizeErrorMessageElement.style.color = "red";
+        isValid = false; // Marquer le fichier comme invalide
       }
-      validateButton.style.backgroundColor = "#A7A7A7";
-      validateButton.disabled = true;
 
-      // Réinitialiser l'effet de survol
-      validateButton.onmouseover = function () {
-        validateButton.style.backgroundColor = "#A7A7A7";
-      };
-      validateButton.onmouseout = function () {
-        validateButton.style.backgroundColor = "#A7A7A7";
-      };
+      // Ne procéder à l'affichage de l'image que si le fichier est valide
+      if (isValid) {
+        const fileUrl = URL.createObjectURL(file);
+        const img = document.createElement("img");
+        img.src = fileUrl;
+        img.style.height = "100%";
+        img.style.width = "auto";
+        img.style.display = "block";
+        img.style.margin = "auto";
+
+        const fenetreAjoutPhoto = document.getElementById(
+          "fenetre-ajout-photo"
+        );
+        fenetreAjoutPhoto.innerHTML = "";
+        fenetreAjoutPhoto.appendChild(img);
+      }
     } else {
-      if (errorMessageElement) {
-        errorMessageElement.remove();
-      }
-      validateButton.style.backgroundColor = "#1D6154";
-      validateButton.disabled = false;
-
-      // Changer la couleur au survol si activé
-      validateButton.onmouseover = function () {
-        validateButton.style.backgroundColor = "#0E2F28";
-      };
-      validateButton.onmouseout = function () {
-        validateButton.style.backgroundColor = "#1D6154";
-      };
+      // Si aucun fichier n'est sélectionné (ce cas est déjà géré par le type d'input)
+      alert("Le fichier doit être au format .jpg ou .png");
     }
-  }
 
-  // Ajouter des écouteurs d'événement pour vérifier le formulaire lors de la saisie
-  document
-    .querySelector('input[name="crea-titre-projet"]')
-    .addEventListener("input", validateFormFields);
-  document
-    .querySelector('select[name="categorie"]')
-    .addEventListener("change", validateFormFields);
-  document
-    .getElementById("bouton-plus-ajouter-photo")
-    .addEventListener("click", function () {
-      setTimeout(validateFormFields, 500);
-    });
+    validateFormFields(); // Appeler la validation des champs du formulaire après l'upload
+  });
 
-  //####################################################################################
-  //POST VERS L'API
-  //####################################################################################
-
-
-// Fonction pour valider que tous les champs du formulaire sont remplis
-function validateForm(title, categoryId) {
-  // Vérifie si le titre ou l'ID de la catégorie sont manquants
-  if (!title || !categoryId) {
-    console.error("Erreur : Tous les champs doivent être remplis !"); // Affiche un message d'erreur dans la console si des champs sont vides
-    alert("Veuillez remplir tous les champs du formulaire avant de soumettre."); // Affiche une alerte à l'utilisateur pour remplir tous les champs
-    return false; // Retourne false pour indiquer que la validation a échoué
-  }
-  return true; // Retourne true si tous les champs sont correctement remplis
+  fileInput.click(); // Ouvrir la boîte de dialogue de sélection de fichier
 }
 
+document
+  .getElementById("bouton-plus-ajouter-photo")
+  .addEventListener("click", function (event) {
+    event.preventDefault(); // Empêcher la soumission du formulaire par défaut
+    handlePhotoUpload();
+  });
+
+// CONTROLE ET VALIDATION DU REMPLISSAGE DE TOUS LES CHAMPS DU FORMULAIRE D'AJOUT DE PHOTO #########
+
+// Fonction pour contrôler le remplissage des champs du formulaire
+function validateFormFields() {
+  const title = document
+    .querySelector('input[name="crea-titre-projet"]')
+    .value.trim();
+  const category = document.querySelector('select[name="categorie"]').value;
+  const imageUploaded = document.querySelector("#fenetre-ajout-photo img");
+  const validateButton = document.getElementById("bouton-valider-crea");
+  const errorMessageElement = document.getElementById("error-message");
+
+  if (title === "" || category === "" || !imageUploaded) {
+    if (!errorMessageElement) {
+      const newErrorMessage = document.createElement("p");
+      newErrorMessage.id = "error-message";
+      newErrorMessage.style.color = "red";
+      newErrorMessage.style.textAlign = "center";
+      newErrorMessage.textContent =
+        "Merci de compléter chacun des champs du formulaire.";
+      validateButton.insertAdjacentElement("beforebegin", newErrorMessage);
+    }
+    validateButton.style.backgroundColor = "#A7A7A7";
+    validateButton.disabled = true;
+
+    // Réinitialiser l'effet de survol
+    validateButton.onmouseover = function () {
+      validateButton.style.backgroundColor = "#A7A7A7";
+    };
+    validateButton.onmouseout = function () {
+      validateButton.style.backgroundColor = "#A7A7A7";
+    };
+  } else {
+    if (errorMessageElement) {
+      errorMessageElement.remove();
+    }
+    validateButton.style.backgroundColor = "#1D6154";
+    validateButton.disabled = false;
+
+    // Changer la couleur au survol si activé
+    validateButton.onmouseover = function () {
+      validateButton.style.backgroundColor = "#0E2F28";
+    };
+    validateButton.onmouseout = function () {
+      validateButton.style.backgroundColor = "#1D6154";
+    };
+  }
+}
+
+// Ajouter des écouteurs d'événement pour vérifier le formulaire lors de la saisie
+document
+  .querySelector('input[name="crea-titre-projet"]')
+  .addEventListener("input", validateFormFields);
+document
+  .querySelector('select[name="categorie"]')
+  .addEventListener("change", validateFormFields);
+document
+  .getElementById("bouton-plus-ajouter-photo")
+  .addEventListener("click", function () {
+    setTimeout(validateFormFields, 500); // Utiliser un timeout pour laisser le temps à l'image de s'afficher
+  });
 
 
+//####################################################################################
+//POST VERS L'API
+//####################################################################################
 
 // Fonction principale pour poster un nouveau projet
 async function postNewWork() {
@@ -622,9 +610,8 @@ async function postNewWork() {
   const title = document.querySelector('input[name="crea-titre-projet"]').value;
   const categoryId = parseInt(document.querySelector('select[name="categorie"]').value);
 
-  if (!validateForm(title, categoryId)) {
-    return;
-  }
+  // Suppression de la fonction validateForm et vérification directe dans le DOM
+  // Le code qui contrôle les champs remplis est déjà en place avant ce point
 
   const formData = new FormData();
 
@@ -669,32 +656,21 @@ async function postNewWork() {
     console.log("Projet posté avec succès :", result);
     alert("Le projet a été ajouté avec succès !");
 
+    // Étape 1 : Simuler le clic sur le bouton #return-modal-button
+    setTimeout(() => {
+      const returnModalButton = document.getElementById('return-modal-button');
+      if (returnModalButton) {
+          returnModalButton.click();
+          console.log("Clic simulé sur #return-modal-button pour fermer la modale.");
+      } else {
+          console.error('Le bouton #return-modal-button n\'a pas été trouvé.');
+      }
+    }, 0); // Délai pour s'assurer que l'alerte a bien été fermée avant de cliquer
 
-
-
-// Étape 1 : Simuler le clic sur le bouton #return-modal-button
-setTimeout(() => {
-  const returnModalButton = document.getElementById('return-modal-button');
-  if (returnModalButton) {
-      returnModalButton.click();
-      console.log("Clic simulé sur #return-modal-button pour fermer la modale.");
-  } else {
-      console.error('Le bouton #return-modal-button n\'a pas été trouvé.');
+  } catch (error) {
+    console.error("Erreur lors du post du nouveau projet : ", error);
   }
-}, 500); // Délai pour s'assurer que l'alerte a bien été fermée avant de cliquer
-
-} catch (error) {
-console.error("Erreur lors du post du nouveau projet : ", error);
 }
-}
-
-
-
-
-
-
-
-
 
 // Attacher un événement au bouton de validation pour déclencher la fonction postNewWork
 document.getElementById("bouton-valider-crea").addEventListener("click", async function (event) {
