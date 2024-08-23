@@ -15,6 +15,7 @@ const baseImageUrl = "http://localhost:5678/images/"; // URL de base
 //####################################################################################
 
 document.addEventListener("DOMContentLoaded", async function () {
+
   //####################################################################################
   //RECUPERATION DES CATEGORIES DEPUIS l'API
   //####################################################################################
@@ -252,10 +253,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       img.src = work.imageUrl;
       img.alt = "Image";
       
-
-
-
-
       const fondIcone = document.createElement("div");
       fondIcone.className = "fond-icone";
 
@@ -613,100 +610,98 @@ function validateForm(title, categoryId) {
   return true; // Retourne true si tous les champs sont correctement remplis
 }
 
+
+
+
 // Fonction principale pour poster un nouveau projet
 async function postNewWork() {
-  console.log("Début de la fonction postNewWork"); // Log indiquant le début de la fonction
+  console.log("Début de la fonction postNewWork");
 
-  // Récupération des éléments du DOM : l'image, le titre et l'ID de la catégorie
-  const imageElement = document.querySelector("#fenetre-ajout-photo img"); // Sélectionne l'image dans la fenêtre d'ajout (modale)
-  const fileUrl = imageElement ? imageElement.src : null; // Récupère l'URL de l'image ou null si aucune image n'est sélectionnée
-  const title = document.querySelector('input[name="crea-titre-projet"]').value; // Récupère le titre saisi dans le champ du formulaire
-  const categoryId = parseInt(document.querySelector('select[name="categorie"]').value); // Récupère l'ID de la catégorie sélectionnée et le convertit en entier
+  const imageElement = document.querySelector("#fenetre-ajout-photo img");
+  const fileUrl = imageElement ? imageElement.src : null;
+  const title = document.querySelector('input[name="crea-titre-projet"]').value;
+  const categoryId = parseInt(document.querySelector('select[name="categorie"]').value);
 
-  console.log("Valeurs récupérées du DOM:"); // Log pour afficher les valeurs récupérées du DOM
-  console.log("File URL :", fileUrl); // Affiche l'URL de l'image récupérée
-  console.log("Title :", title); // Affiche le titre récupéré
-  console.log("Category ID :", categoryId); // Affiche l'ID de la catégorie récupérée
-
-  // Vérifie si tous les champs du formulaire sont remplis
   if (!validateForm(title, categoryId)) {
-    return; // Arrête l'exécution si la validation échoue
+    return;
   }
 
-  // Préparation des données du formulaire à envoyer via l'API
-  const formData = new FormData(); // Crée une nouvelle instance de FormData pour stocker les données à envoyer
+  const formData = new FormData();
 
-  // Vérifie si l'URL de l'image est un blob (un objet binaire)
   if (fileUrl && fileUrl.startsWith("blob:")) {
     try {
-      const response = await fetch(fileUrl); // Effectue une requête pour récupérer le blob via l'URL
-      const blob = await response.blob(); // Convertit la réponse en blob
-      formData.append("image", blob); // Ajoute le blob de l'image directement au FormData sous la clé "image"
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      formData.append("image", blob);
     } catch (error) {
-      console.error("Erreur lors de la récupération de l'image:", error); // Affiche un message d'erreur si la récupération échoue
-      return; // Arrête l'exécution si une erreur survient
+      console.error("Erreur lors de la récupération de l'image:", error);
+      return;
     }
   } else {
-    console.error("Erreur : L'image n'a pas été correctement sélectionnée ou n'est pas valide."); // Affiche un message d'erreur si l'image n'est pas valide ou n'a pas été sélectionnée
-    return; // Arrête l'exécution si l'image n'est pas correcte
+    console.error("Erreur : L'image n'a pas été correctement sélectionnée ou n'est pas valide.");
+    return;
   }
 
-  formData.append("title", title); // Ajoute le titre au FormData sous la clé "title"
-  formData.append("category", categoryId); // Ajoute l'ID de la catégorie au FormData sous la clé "category"
+  formData.append("title", title);
+  formData.append("category", categoryId);
 
-  console.log("FormData préparé :"); // Log pour indiquer que FormData est prêt
-  formData.forEach((value, key) => {
-    console.log(`${key}:`, value); // Affiche chaque paire clé/valeur du FormData pour vérification
-  });
-
-  // Envoi des données à l'API via une requête POST
   try {
-    const token = localStorage.getItem("authToken"); // Récupère le token d'authentification stocké dans le localStorage
-    console.log("Token d'authentification récupéré :", token); // Affiche le token pour vérification
-
+    const token = localStorage.getItem("authToken");
     if (!token) {
-      console.error("Erreur : Accès non autorisé à l'API 'post'"); // Affiche un message d'erreur si aucun token n'est trouvé
-      return; // Arrête l'exécution si le token est absent
+      console.error("Erreur : Accès non autorisé à l'API 'post'");
+      return;
     }
 
-    // Envoie de la requête POST avec le FormData et le token d'authentification
     const response = await fetch(apiUrl + "/works", {
-      method: "POST", // Spécifie que la méthode de la requête est POST pour envoyer des données
+      method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`, // Ajoute le token dans les headers pour l'authentification
+        Authorization: `Bearer ${token}`,
       },
-      body: formData, // Envoie le FormData contenant les données du formulaire
+      body: formData,
     });
 
-    console.log("Réponse de l'API reçue."); // Log pour indiquer que la réponse de l'API a été reçue
-    
     if (!response.ok) {
-      const errorMessage = `Erreur HTTP : ${response.status}`; // Crée un message d'erreur si la réponse n'est pas OK
-      console.log(errorMessage); // Affiche le message d'erreur
-      throw new Error(errorMessage); // Lance une exception avec le message d'erreur
+      const errorMessage = `Erreur HTTP : ${response.status}`;
+      throw new Error(errorMessage);
     }
 
-    const result = await response.json(); // Convertit la réponse en JSON pour la traiter
-    console.log("Projet posté avec succès :", result); // Affiche le résultat du post
-    alert("Le projet a été ajouté avec succès !"); // Affiche une alerte pour indiquer que le projet a été ajouté avec succès
-    window.location.reload(); // Recharge la page pour mettre à jour la galerie et afficher le nouveau projet
+    const result = await response.json();
+    console.log("Projet posté avec succès :", result);
+    alert("Le projet a été ajouté avec succès !");
 
 
 
-    
-  } catch (error) {
-    console.error("Erreur lors du post du nouveau projet : ", error); // Affiche un message d'erreur en cas d'échec de la requête
+
+// Étape 1 : Simuler le clic sur le bouton #return-modal-button
+setTimeout(() => {
+  const returnModalButton = document.getElementById('return-modal-button');
+  if (returnModalButton) {
+      returnModalButton.click();
+      console.log("Clic simulé sur #return-modal-button pour fermer la modale.");
+  } else {
+      console.error('Le bouton #return-modal-button n\'a pas été trouvé.');
   }
+}, 500); // Délai pour s'assurer que l'alerte a bien été fermée avant de cliquer
 
-  console.log("Fin de la fonction postNewWork"); // Log pour indiquer la fin de l'exécution de la fonction
+} catch (error) {
+console.error("Erreur lors du post du nouveau projet : ", error);
 }
+}
+
+
+
+
+
+
+
+
 
 // Attacher un événement au bouton de validation pour déclencher la fonction postNewWork
 document.getElementById("bouton-valider-crea").addEventListener("click", async function (event) {
-  event.preventDefault(); // Empêche le comportement par défaut du bouton (soumission du formulaire)
-  console.log("Bouton 'valider' cliqué, appel de la fonction postNewWork..."); // Log pour indiquer que le bouton a été cliqué
-  await postNewWork(); // Appel de la fonction postNewWork pour envoyer le nouveau projet
+  event.preventDefault();
+  await postNewWork();
 });
+
 
 
 
