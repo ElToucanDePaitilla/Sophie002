@@ -1,4 +1,3 @@
-
 //####################################################################################
 //RECUPERATION DU DOM
 //####################################################################################
@@ -6,9 +5,9 @@
 document.addEventListener("DOMContentLoaded", async function () {
 
 
-  //####################################################################################
-  //CREATION DE LA GALERIE
-  //####################################################################################
+  //##################################################################################
+  //CREATION DE LA GALERIE PRINCIPALE
+  //##################################################################################
 
   //Vidage du container .gallery de tous ses projets présents
   function clearGallery() {
@@ -39,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     return figure;
   }
 
-  // Fonction pour récupérer les projets depuis l'API, puis les ajouter dans la galerie
+  // Fonction pour récupérer les projets depuis l'API, puis les ajouter dans la galerie principale
   async function fetchAndDisplayWorks(categoryId = "all") {
     try {
       // Récupération des works depuis l'API.
@@ -50,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       const galleryDiv = document.querySelector(".gallery");
       clearGallery();
 
-      // Utilisation d'une boucle for pour créer et ajouter les éléments de la galerie.
+      // Utilisation d'une boucle for pour créer et ajouter les éléments de la galerie principale
       works.forEach((project) => {
         if (categoryId === "all" || project.categoryId == categoryId) {
           const galleryProject = createGalleryProject(project);
@@ -128,7 +127,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   //####################################################################################
-  //FORMULAIRE DE CONNEXION
+  //FORMULAIRE DE CONNEXION POUR ACCEDER AU MODE "EDITION"
   //####################################################################################
 
   // Vérification de l'authentification
@@ -161,7 +160,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   }
 
   //####################################################################################
-  //FENETRE MODALE - GALERIE PHOTO
+  //FENETRE MODALE - AFFICHAGE DE LA GALERIE PHOTO ET FONCTION "SUPPRESSION DE PROJETS"
   //####################################################################################
 
   function initializeModal() {
@@ -315,7 +314,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   initializeAddPhotoButton();
 
   //####################################################################################
-  //FENETRE MODALE - AJOUT PHOTO
+  //FENETRE MODALE - FONCTION "AJOUT DE PROJETS"
   //####################################################################################
 
   //INITIALISATION DU CONTENU DE LA "MODAL AJOUT-PHOTO" ################################
@@ -429,7 +428,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  // GESTION DU 'PHOTO UPLOAD' ET DES MESSAGES D'ERREUR ########################################################
+  // GESTION DU 'PHOTO UPLOAD' ET DES MESSAGES D'ERREUR ############################################
 
   // Fonction pour gérer l'upload de la photo
   function handlePhotoUpload() {
@@ -456,9 +455,8 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (file) {
         // Vérification du type de fichier
         const validFileTypes = ["image/jpeg", "image/png"];
-        if (!validFileTypes.includes(file.type)) {
-          // Vérifier si le type du fichier est valide
-          // Afficher un message d'erreur en rouge si le type du fichier est incorrect
+        if (!validFileTypes.includes(file.type) || file.name.endsWith(".jpeg")) {
+          // Rejet des fichiers avec extension .jpeg
           typeErrorMessageElement.textContent =
             "Le fichier doit être de type .jpg ou .png";
           typeErrorMessageElement.style.color = "red";
@@ -572,10 +570,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
   //####################################################################################
-  //POST VERS L'API
+  //FONCTION POST DE NOUVEAUX PROJETS
   //####################################################################################
 
-  // Fonction principale pour poster un nouveau projet
+  // Fonction principale pour Post un nouveau projet
   async function postNewWork() {
     console.log("Début de la fonction postNewWork");
 
