@@ -97,10 +97,16 @@
         <form action="#" method="post" id="form-contact">
           <label for="name">Nom</label>
           <input type="text" name="name" id="name" />
+          <div id="name-error" class="error-message"></div> <!-- Message d'erreur pour le nom -->
+        
           <label for="email">Email</label>
           <input type="email" name="email" id="email" />
+          <div id="email-error" class="error-message"></div> <!-- Message d'erreur pour l'email -->
+        
           <label for="message">Message</label>
           <textarea name="message" id="message" cols="30" rows="10"></textarea>
+          <div id="message-error" class="error-message"></div> <!-- Message d'erreur pour le message -->
+        
           <input type="submit" value="Envoyer" id="envoyer" />
         </form>
       </section>

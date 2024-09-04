@@ -179,5 +179,70 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   }
 
+  //####################################################################################
+  // VALIDATION DU FORMULAIRE CONTACT
+  //####################################################################################
+  
+   // Fonction de validation du formulaire de contact
+  function validateContactForm(event) {
+    event.preventDefault(); // Empêche l'envoi par défaut du formulaire
+
+    const name = document.getElementById('name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const message = document.getElementById('message').value.trim();
     
+    const nameError = document.getElementById('name-error');
+    const emailError = document.getElementById('email-error');
+    const messageError = document.getElementById('message-error');
+    
+    let isValid = true;
+
+    // Validation du nom (doit contenir uniquement des lettres)
+    const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
+    if (name === "" || !nameRegex.test(name)) {
+      nameError.textContent = "Veuillez entrer un nom valide.";
+      nameError.style.color = "red";
+      isValid = false;
+    } else {
+      nameError.textContent = ""; // Efface l'erreur si le champ est valide
+    }
+
+    // Validation de l'email (format valide)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (email === "" || !emailRegex.test(email)) {
+      emailError.textContent = "Veuillez entrer un email valide.";
+      emailError.style.color = "red";
+      isValid = false;
+    } else {
+      emailError.textContent = ""; // Efface l'erreur si le champ est valide
+    }
+
+    // Validation du message (ne doit pas être vide et doit contenir au moins 10 caractères)
+    if (message.length < 10) {
+      messageError.textContent = "Le message doit contenir au moins 10 caractères.";
+      messageError.style.color = "red";
+      isValid = false;
+    } else {
+      messageError.textContent = ""; // Efface l'erreur si le champ est valide
+    }
+
+    // Si tout est valide, afficher une alerte et réinitialiser le formulaire
+    if (isValid) {
+      alert("Votre message a bien été envoyé!"); // Alerte de succès
+      document.getElementById('form-contact').reset(); // Réinitialise le formulaire
+    }
+  }
+
+  // Attacher un écouteur d'événement au bouton "Envoyer"
+  const submitButton = document.getElementById('envoyer');
+  submitButton.addEventListener('click', validateContactForm);
+
+
+
+
+
+
+
+
+
 });
